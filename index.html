@@ -6,193 +6,36 @@
     <title>منصتي حمل وانت مرتاح</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .phone-app { width: 100%; max-width: 400px; height: 100vh; max-height: 780px; background: #ffffff; border-radius: 0; overflow-y: auto; overflow-x: hidden; position: relative; }
+        .phone-app::-webkit-scrollbar { width: 3px; }
+        .phone-app::-webkit-scrollbar-track { background: #f1f1f1; }
+        .phone-app::-webkit-scrollbar-thumb { background: #2a3f8e; border-radius: 10px; }
+        .app-header { background: linear-gradient(135deg, #1e2b6e, #2a3f8e); padding: 20px 20px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logo h1 { font-size: 22px; font-weight: 900; color: white; text-align: center; }
+        .logo h1 span { color: #fbbf24; }
+        .logo p { font-size: 11px; text-align: center; color: #cbd5e1; margin-top: 4px; }
+        .search-bar { background: white; margin: 16px 16px 12px; padding: 8px 16px; border-radius: 60px; display: flex; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .search-bar input { flex: 1; border: none; outline: none; font-size: 14px; font-family: 'Cairo', sans-serif; background: transparent; }
+        .search-bar button { background: #2a3f8e; color: white; border: none; padding: 6px 20px; border-radius: 40px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; }
+        .categories-wrapper { padding: 8px 16px 12px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+        .categories-list { display: inline-flex; gap: 12px; }
+        .category-chip { background: #f1f5f9; padding: 8px 18px; border-radius: 40px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-block; }
+        .category-chip.active { background: #2a3f8e; color: white; transform: scale(1.02); }
+        .apps-container { padding: 8px 16px 80px; display: flex; flex-direction: column; gap: 12px; }
+        .app-item { background: white; border-radius: 24px; padding: 12px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eef2ff; transition: 0.2s; }
+        .app-icon { width: 52px; height: 52px; background: #f0f4ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+        .app-details { flex: 1; }
+        .app-name { font-weight: 800; font-size: 16px; color: #0f172a; }
+        .app-category { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .download-link { background: #10b981; color: white; border: none; padding: 8px 18px; border-radius: 40px; font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
+        .loading-state { text-align: center; padding: 60px 20px; color: #2a3f8e; font-size: 16px; }
+        .loading-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2a3f8e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        footer { text-align: center; font-size: 10px; color: #94a3b8; padding: 16px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* هاتف حقيقي بدون زوائد */
-        .phone-app {
-            width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            max-height: 780px;
-            background: #ffffff;
-            border-radius: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .phone-app::-webkit-scrollbar {
-            width: 3px;
-        }
-        .phone-app::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .phone-app::-webkit-scrollbar-thumb {
-            background: #2a3f8e;
-            border-radius: 10px;
-        }
-
-        /* الهيدر */
-        .app-header {
-            background: linear-gradient(135deg, #1e2b6e, #2a3f8e);
-            padding: 20px 20px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .logo h1 {
-            font-size: 22px;
-            font-weight: 900;
-            color: white;
-            text-align: center;
-        }
-        .logo h1 span {
-            color: #fbbf24;
-        }
-        .logo p {
-            font-size: 11px;
-            text-align: center;
-            color: #cbd5e1;
-            margin-top: 4px;
-        }
-
-        /* شريط البحث */
-        .search-bar {
-            background: white;
-            margin: 16px 16px 12px;
-            padding: 8px 16px;
-            border-radius: 60px;
-            display: flex;
-            gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .search-bar input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-            background: transparent;
-        }
-        .search-bar button {
-            background: #2a3f8e;
-            color: white;
-            border: none;
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        /* التصنيفات (قابلة للتمرير أفقيًا) */
-        .categories-wrapper {
-            padding: 8px 16px 12px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-        }
-        .categories-list {
-            display: inline-flex;
-            gap: 12px;
-        }
-        .category-chip {
-            background: #f1f5f9;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-block;
-        }
-        .category-chip.active {
-            background: #2a3f8e;
-            color: white;
-            transform: scale(1.02);
-        }
-
-        /* قائمة البرامج */
-        .apps-container {
-            padding: 8px 16px 80px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .app-item {
-            background: white;
-            border-radius: 24px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border: 1px solid #eef2ff;
-            transition: 0.2s;
-        }
-        .app-icon {
-            width: 52px;
-            height: 52px;
-            background: #f0f4ff;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-        .app-details {
-            flex: 1;
-        }
-        .app-name {
-            font-weight: 800;
-            font-size: 16px;
-            color: #0f172a;
-        }
-        .app-category {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 4px;
-        }
-        .download-link {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #94a3b8;
-        }
-        footer {
-            text-align: center;
-            font-size: 10px;
-            color: #94a3b8;
-            padding: 16px;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -201,6 +44,7 @@
         <div class="logo">
             <h1>منصتي <span>حمل وانت مرتاح</span></h1>
             <p>🚀 تحميل سريع وآمن | CET+</p>
+
         </div>
     </div>
 
@@ -213,50 +57,75 @@
         <div class="categories-list" id="categoriesList"></div>
     </div>
 
-    <div class="apps-container" id="appsContainer"></div>
+    <div class="apps-container" id="appsContainer">
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            جاري تحميل البيانات...
+        </div>
+    </div>
     <footer>© 2026 منصتي حمل وانت مرتاح - جميع الحقوق محفوظة</footer>
 </div>
 
-<script>
-    const STORAGE_KEY = "cet_apps_list_2026";
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLLJAwLm1kPrfhhoXxP9c2M0LpoGFP2Mg",
+        authDomain: "ssssss-33240.firebaseapp.com",
+        databaseURL: "https://ssssss-33240-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "ssssss-33240",
+        storageBucket: "ssssss-33240.firebasestorage.app",
+        messagingSenderId: "660773546629",
+        appId: "1:660773546629:web:e63d6edfd1b7c6d3d497ec",
+        measurementId: "G-5ESZN11ZTY"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
 
     let apps = [];
     let categories = [];
     let currentCategory = "all";
     let searchQuery = "";
 
-    function loadData() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if(stored) {
-            const data = JSON.parse(stored);
-            apps = data.apps || [];
-            categories = data.categories || [];
-        } else {
-            apps = [];
-            categories = [];
-            saveToStorage();
-        }
+    // 📡 الاستماع للتغييرات في التصنيفات بشكل فوري
+    const catsQuery = query(collection(db, "categories"), orderBy("createdAt", "asc"));
+    onSnapshot(catsQuery, (snapshot) => {
+        categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderCategories();
-        renderApps();
-    }
+    }, (error) => {
+        console.error("خطأ في تحميل التصنيفات:", error);
+    });
 
-    function saveToStorage() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps, categories }));
-        window.dispatchEvent(new Event("storage"));
-    }
+    // 📡 الاستماع للتغييرات في البرامج بشكل فوري
+    const appsQuery = query(collection(db, "apps"), orderBy("createdAt", "desc"));
+    onSnapshot(appsQuery, (snapshot) => {
+        apps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderApps();
+    }, (error) => {
+        console.error("خطأ في تحميل البرامج:", error);
+        document.getElementById("appsContainer").innerHTML = `
+            <div class="empty-state">
+                ❌ خطأ في الاتصال بقاعدة البيانات<br>
+                <small style="font-size:11px; margin-top:8px; display:block;">تأكد من إعدادات Firebase في الكود</small>
+            </div>`;
+    });
 
     function renderCategories() {
         const container = document.getElementById("categoriesList");
-        if(categories.length === 0) {
+        if (categories.length === 0) {
             container.innerHTML = `<div style="color:#94a3b8; padding:8px;">📭 لا توجد تصنيفات حالياً</div>`;
             return;
         }
         let html = `<div class="category-chip ${currentCategory === "all" ? "active" : ""}" data-cat="all">✨ الكل</div>`;
         categories.forEach(cat => {
-            html += `<div class="category-chip ${currentCategory === cat ? "active" : ""}" data-cat="${cat}">${cat}</div>`;
+            html += `<div class="category-chip ${currentCategory === cat.name ? "active" : ""}" data-cat="${cat.name}">${cat.name}</div>`;
         });
         container.innerHTML = html;
-
         document.querySelectorAll(".category-chip").forEach(chip => {
             chip.addEventListener("click", () => {
                 currentCategory = chip.getAttribute("data-cat");
@@ -269,24 +138,25 @@
     function renderApps() {
         const container = document.getElementById("appsContainer");
         let filtered = apps.filter(app => {
-            if(currentCategory !== "all" && app.category !== currentCategory) return false;
-            if(searchQuery && !app.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+            if (currentCategory !== "all" && app.category !== currentCategory) return false;
+            if (searchQuery && !app.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
             return true;
         });
 
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
             container.innerHTML = `<div class="empty-state">📭 لا توجد برامج مطابقة</div>`;
             return;
         }
 
         container.innerHTML = filtered.map(app => `
             <div class="app-item">
-                <div class="app-icon">${app.icon}</div>
+                <div class="app-icon">${app.icon || "📦"}</div>
                 <div class="app-details">
                     <div class="app-name">${app.name}</div>
                     <div class="app-category">📂 ${app.category}</div>
                 </div>
-                <a href="${app.downloadLink !== "#" ? app.downloadLink : "javascript:void(0)"}" class="download-link" data-link="${app.downloadLink}" data-name="${app.name}">تحميل</a>
+                <a href="${app.downloadLink && app.downloadLink !== "#" ? app.downloadLink : "javascript:void(0)"}"
+                   class="download-link" target="_blank" data-link="${app.downloadLink || "#"}" data-name="${app.name}">تحميل</a>
             </div>
         `).join("");
 
@@ -294,7 +164,7 @@
             btn.addEventListener("click", (e) => {
                 const link = btn.getAttribute("data-link");
                 const name = btn.getAttribute("data-name");
-                if(!link || link === "#") {
+                if (!link || link === "#") {
                     e.preventDefault();
                     alert(`🔔 تم طلب تحميل: ${name}\nسيتم تفعيل الرابط من لوحة التحكم`);
                 }
@@ -306,18 +176,11 @@
         searchQuery = document.getElementById("searchInput").value;
         renderApps();
     });
+
     document.getElementById("searchInput").addEventListener("keyup", (e) => {
-        if(e.key === "Enter") {
+        if (e.key === "Enter") {
             searchQuery = e.target.value;
             renderApps();
-        }
-    });
-
-    loadData();
-
-    window.addEventListener("storage", (e) => {
-        if(e.key === STORAGE_KEY) {
-            loadData();
         }
     });
 </script>
