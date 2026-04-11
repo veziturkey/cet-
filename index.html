@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>منصتي حمل وانت مرتاح</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Simple Icons CDN - أيقونات احترافية للعلامات التجارية -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -25,7 +26,8 @@
         .category-chip.active { background: #2a3f8e; color: white; transform: scale(1.02); }
         .apps-container { padding: 8px 16px 80px; display: flex; flex-direction: column; gap: 12px; }
         .app-item { background: white; border-radius: 24px; padding: 12px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eef2ff; transition: 0.2s; }
-        .app-icon { width: 52px; height: 52px; background: #f0f4ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+        .app-icon { width: 52px; height: 52px; background: #f0f4ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+        .app-icon img { width: 32px; height: 32px; object-fit: contain; }
         .app-details { flex: 1; }
         .app-name { font-weight: 800; font-size: 16px; color: #0f172a; }
         .app-category { font-size: 11px; color: #64748b; margin-top: 4px; }
@@ -35,7 +37,6 @@
         .loading-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2a3f8e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         footer { text-align: center; font-size: 10px; color: #94a3b8; padding: 16px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
-
     </style>
 </head>
 <body>
@@ -44,7 +45,6 @@
         <div class="logo">
             <h1>منصتي <span>حمل وانت مرتاح</span></h1>
             <p>🚀 تحميل سريع وآمن | CET+</p>
-
         </div>
     </div>
 
@@ -91,6 +91,19 @@
     let categories = [];
     let currentCategory = "all";
     let searchQuery = "";
+
+    // دالة للحصول على أيقونة SVG من Simple Icons
+    function getIconHtml(iconName, size = 32) {
+        if (!iconName || iconName === "") {
+            iconName = "github";
+        }
+        // محاولة تحميل الأيقونة من CDN، مع fallback لأيقونة افتراضية
+        return `<img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/${iconName}.svg" 
+                    width="${size}" height="${size}" 
+                    style="display:inline-block; object-fit:contain;" 
+                    alt="${iconName}"
+                    onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/github.svg';">`;
+    }
 
     // 📡 الاستماع للتغييرات في التصنيفات بشكل فوري
     const catsQuery = query(collection(db, "categories"), orderBy("createdAt", "asc"));
@@ -150,7 +163,9 @@
 
         container.innerHTML = filtered.map(app => `
             <div class="app-item">
-                <div class="app-icon">${app.icon || "📦"}</div>
+                <div class="app-icon">
+                    ${getIconHtml(app.icon || "github", 32)}
+                </div>
                 <div class="app-details">
                     <div class="app-name">${app.name}</div>
                     <div class="app-category">📂 ${app.category}</div>
