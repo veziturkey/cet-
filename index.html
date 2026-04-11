@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>منصتي حمل وانت مرتاح</title>
+    <title>منصتي | +CET</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Simple Icons CDN - أيقونات احترافية للعلامات التجارية -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -37,10 +36,228 @@
         .loading-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2a3f8e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         footer { text-align: center; font-size: 10px; color: #94a3b8; padding: 16px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
+
+        /* ===== شاشة ترحيب مثل Netflix ===== */
+        /* ظهور بطيء من اليسار مع تفتت وتكسير */
+        /* اختفاء: زوم للأمام (Zoom In) */
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+        }
+        
+        /* تأثير الاختفاء - زوم للأمام */
+        .splash-screen.hide {
+            animation: zoomOutForward 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .splash-content {
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        /* ظهور بطيء من اليسار مع تكسير الحروف */
+        .splash-logo {
+            font-size: 72px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -2px;
+            position: relative;
+            animation: slideInFromLeft 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+        
+        /* تفتت الحروف - كل حرف يظهر بشكل متقطع */
+        .splash-logo span {
+            color: #e50914;
+            display: inline-block;
+            animation: textGlitch 0.8s ease-in-out forwards;
+            animation-delay: 0.5s;
+        }
+        
+        /* النص الثانوي مع تأثير التكسير */
+        .splash-plus {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 16px;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 3px;
+            opacity: 0;
+            animation: fadeInWithGlitch 0.8s ease-out forwards;
+            animation-delay: 0.7s;
+        }
+        
+        /* مؤشر التحميل يظهر متأخراً */
+        .splash-loader {
+            width: 3px;
+            height: 3px;
+            background: #e50914;
+            border-radius: 50%;
+            margin: 40px auto 0;
+            opacity: 0;
+            animation: loaderAppear 0.5s ease-out forwards;
+            animation-delay: 1.2s;
+            box-shadow: 0 0 8px #e50914;
+        }
+        
+        /* تأثير الزوم للأمام (الاختفاء) */
+        @keyframes zoomOutForward {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+                backdrop-filter: blur(0);
+            }
+            30% {
+                opacity: 0.8;
+                transform: scale(1.3);
+                backdrop-filter: blur(2px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2);
+                backdrop-filter: blur(8px);
+                visibility: hidden;
+            }
+        }
+        
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+                filter: blur(8px);
+            }
+            20% {
+                transform: translateX(-60%);
+                opacity: 0.3;
+                filter: blur(5px);
+            }
+            50% {
+                transform: translateX(-20%);
+                opacity: 0.7;
+                filter: blur(2px);
+            }
+            80% {
+                transform: translateX(5%);
+                opacity: 0.9;
+                filter: blur(0);
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+        
+        @keyframes textGlitch {
+            0% {
+                transform: skew(0deg);
+                opacity: 0;
+                text-shadow: none;
+            }
+            10% {
+                transform: skew(15deg);
+                opacity: 0.3;
+                text-shadow: -2px 0 #e50914, 2px 0 #ffffff;
+            }
+            20% {
+                transform: skew(-10deg);
+                opacity: 0.5;
+                text-shadow: 3px 0 #e50914, -3px 0 #ffffff;
+            }
+            30% {
+                transform: skew(8deg);
+                opacity: 0.7;
+                text-shadow: -1px 0 #e50914;
+            }
+            50% {
+                transform: skew(-5deg);
+                opacity: 0.9;
+                text-shadow: 2px 0 #ffffff;
+            }
+            70% {
+                transform: skew(2deg);
+                opacity: 1;
+                text-shadow: none;
+            }
+            100% {
+                transform: skew(0deg);
+                opacity: 1;
+                text-shadow: none;
+            }
+        }
+        
+        @keyframes fadeInWithGlitch {
+            0% {
+                opacity: 0;
+                transform: translateX(-30px);
+                letter-spacing: 10px;
+                filter: blur(4px);
+            }
+            30% {
+                opacity: 0.4;
+                transform: translateX(-10px);
+                letter-spacing: 5px;
+                filter: blur(2px);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translateX(2px);
+                letter-spacing: 2px;
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+                letter-spacing: 3px;
+                filter: blur(0);
+            }
+        }
+        
+        @keyframes loaderAppear {
+            0% {
+                opacity: 0;
+                width: 3px;
+            }
+            100% {
+                opacity: 1;
+                width: 40px;
+            }
+        }
+        
+        /* تأثير تكسير إضافي عند اكتمال الظهور */
+        @keyframes crackEffect {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.02);
+            }
+        }
+        
+        .splash-logo.glitch-complete {
+            animation: crackEffect 0.2s ease-out;
+        }
     </style>
 </head>
 <body>
 <div class="phone-app">
+    <!-- شاشة ترحيب مثل Netflix (ظهور بطيء من اليسار + اختفاء زوم للأمام) -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-logo" id="mainLogo">منصتي <span>+CET</span></div>
+            <div class="splash-plus">✦ C E T ✦</div>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
     <div class="app-header">
         <div class="logo">
             <h1>منصتي <span>حمل وانت مرتاح</span></h1>
@@ -63,7 +280,7 @@
             جاري تحميل البيانات...
         </div>
     </div>
-    <footer>© 2026 منصتي حمل وانت مرتاح - جميع الحقوق محفوظة</footer>
+    <footer>© 2026 منصتي +CET - جميع الحقوق محفوظة</footer>
 </div>
 
 <!-- Firebase SDK -->
@@ -92,12 +309,31 @@
     let currentCategory = "all";
     let searchQuery = "";
 
+    // إضافة تأثير التكسير النهائي بعد انتهاء الأنيميشن
+    setTimeout(() => {
+        const logo = document.getElementById("mainLogo");
+        if (logo) {
+            logo.classList.add("glitch-complete");
+        }
+    }, 1300);
+
+    // إخفاء شاشة الترحيب بعد 3 ثوانٍ مع تأثير الزوم للأمام
+    setTimeout(() => {
+        const splash = document.getElementById("splashScreen");
+        if (splash) {
+            splash.classList.add("hide");
+            // إزالة الشاشة من DOM بعد انتهاء تأثير الزوم
+            setTimeout(() => {
+                if (splash && splash.parentNode) splash.remove();
+            }, 800);
+        }
+    }, 3000);
+
     // دالة للحصول على أيقونة SVG من Simple Icons
     function getIconHtml(iconName, size = 32) {
         if (!iconName || iconName === "") {
             iconName = "github";
         }
-        // محاولة تحميل الأيقونة من CDN، مع fallback لأيقونة افتراضية
         return `<img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/${iconName}.svg" 
                     width="${size}" height="${size}" 
                     style="display:inline-block; object-fit:contain;" 
@@ -105,7 +341,7 @@
                     onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/github.svg';">`;
     }
 
-    // 📡 الاستماع للتغييرات في التصنيفات بشكل فوري
+    // الاستماع للتصنيفات
     const catsQuery = query(collection(db, "categories"), orderBy("createdAt", "asc"));
     onSnapshot(catsQuery, (snapshot) => {
         categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -114,7 +350,7 @@
         console.error("خطأ في تحميل التصنيفات:", error);
     });
 
-    // 📡 الاستماع للتغييرات في البرامج بشكل فوري
+    // الاستماع للبرامج
     const appsQuery = query(collection(db, "apps"), orderBy("createdAt", "desc"));
     onSnapshot(appsQuery, (snapshot) => {
         apps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -124,7 +360,7 @@
         document.getElementById("appsContainer").innerHTML = `
             <div class="empty-state">
                 ❌ خطأ في الاتصال بقاعدة البيانات<br>
-                <small style="font-size:11px; margin-top:8px; display:block;">تأكد من إعدادات Firebase في الكود</small>
+                <small style="font-size:11px; margin-top:8px; display:block;">تأكد من إعدادات Firebase</small>
             </div>`;
     });
 
