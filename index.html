@@ -3,103 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>منصتي | +CET</title>
+    <title>+CET | منصتي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .phone-app { width: 100%; max-width: 400px; height: 100vh; max-height: 780px; background: #ffffff; border-radius: 0; overflow-y: auto; overflow-x: hidden; position: relative; }
-        .phone-app::-webkit-scrollbar { width: 3px; }
-        .phone-app::-webkit-scrollbar-track { background: #f1f1f1; }
-        .phone-app::-webkit-scrollbar-thumb { background: #2a3f8e; border-radius: 10px; }
-        .app-header { background: linear-gradient(135deg, #1e2b6e, #2a3f8e); padding: 20px 20px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .logo h1 { font-size: 22px; font-weight: 900; color: white; text-align: center; }
-        .logo h1 span { color: #fbbf24; }
-        .logo p { font-size: 11px; text-align: center; color: #cbd5e1; margin-top: 4px; }
-        .search-bar { background: white; margin: 16px 16px 12px; padding: 8px 16px; border-radius: 60px; display: flex; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .search-bar input { flex: 1; border: none; outline: none; font-size: 14px; font-family: 'Cairo', sans-serif; background: transparent; }
-        .search-bar button { background: #2a3f8e; color: white; border: none; padding: 6px 20px; border-radius: 40px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; }
-        .categories-wrapper { padding: 8px 16px 12px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
-        .categories-list { display: inline-flex; gap: 12px; }
-        .category-chip { background: #f1f5f9; padding: 8px 18px; border-radius: 40px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-block; }
-        .category-chip.active { background: #2a3f8e; color: white; transform: scale(1.02); }
-        .apps-container { padding: 8px 16px 80px; display: flex; flex-direction: column; gap: 12px; }
-        .app-item { background: white; border-radius: 24px; padding: 12px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eef2ff; transition: 0.2s; }
-        .app-icon { width: 52px; height: 52px; background: #f0f4ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
-        .app-icon img { width: 32px; height: 32px; object-fit: contain; }
-        .app-details { flex: 1; }
-        .app-name { font-weight: 800; font-size: 16px; color: #0f172a; }
-        .app-category { font-size: 11px; color: #64748b; margin-top: 4px; }
-        .download-link { background: #10b981; color: white; border: none; padding: 8px 18px; border-radius: 40px; font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: none; display: inline-block; }
-        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
-        .loading-state { text-align: center; padding: 60px 20px; color: #2a3f8e; font-size: 16px; }
-        .loading-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2a3f8e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        footer { text-align: center; font-size: 10px; color: #94a3b8; padding: 16px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* ===== شاشة ترحيب مثل Netflix ===== */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(145deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        /* حاوية التطبيق - زجاجية حديثة */
+        .phone-app {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 780px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .phone-app::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .phone-app::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .phone-app::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border-radius: 10px;
+        }
+
+        /* هيدر زجاجي متطور */
+        .app-header {
+            background: rgba(15, 12, 41, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 28px 20px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 900;
+            text-align: center;
+            background: linear-gradient(135deg, #fff, #feca57, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            font-size: 10px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 6px;
+            letter-spacing: 2px;
+        }
+
+        /* شريط بحث زجاجي */
+        .search-bar {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            margin: 20px 16px 16px;
+            padding: 12px 18px;
+            border-radius: 50px;
+            display: flex;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #feca57;
+            box-shadow: 0 0 20px rgba(254, 202, 87, 0.2);
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            background: transparent;
+            color: white;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-bar button {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar button:hover {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* التصنيفات - شرائط متطورة */
+        .categories-wrapper {
+            padding: 8px 16px 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+
+        .categories-list {
+            display: inline-flex;
+            gap: 12px;
+        }
+
+        .category-chip {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .category-chip.active {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: #1a1a2e;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+            border-color: transparent;
+        }
+
+        /* حاوية التطبيقات - بطاقات زجاجية ثلاثية الأبعاد */
+        .apps-container {
+            padding: 8px 16px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .app-item {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
+
+        .app-item:hover {
+            transform: translateY(-4px) scale(1.01);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(254, 202, 87, 0.5);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-icon {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(254, 202, 87, 0.2));
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .app-icon img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .app-details {
+            flex: 1;
+        }
+
+        .app-name {
+            font-weight: 800;
+            font-size: 16px;
+            background: linear-gradient(135deg, #fff, #feca57);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .app-category {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .download-link {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: #1a1a2e;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-link:hover {
+            transform: scale(0.96);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #feca57;
+            font-size: 16px;
+        }
+
+        .loading-spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #feca57;
+            border-right: 3px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 10px;
+        }
+
+        /* شاشة ترحيب متطورة */
         .splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000000;
+            background: radial-gradient(circle at center, #1a1a3e 0%, #0f0c29 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
         }
-        
+
         .splash-screen.hide {
             animation: zoomOutForward 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
-        
+
         .splash-content {
             text-align: center;
             overflow: hidden;
         }
-        
+
         .splash-logo {
             font-size: 72px;
             font-weight: 900;
-            color: white;
+            background: linear-gradient(135deg, #fff, #feca57, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: -2px;
             position: relative;
             animation: slideInFromLeft 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
-        
+
         .splash-logo span {
-            color: #e50914;
+            background: linear-gradient(135deg, #feca57, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: inline-block;
             animation: textGlitch 0.8s ease-in-out forwards;
             animation-delay: 0.5s;
         }
-        
+
         .splash-plus {
             font-size: 18px;
             font-weight: 600;
             margin-top: 16px;
-            color: rgba(255,255,255,0.8);
-            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 4px;
             opacity: 0;
             animation: fadeInWithGlitch 0.8s ease-out forwards;
             animation-delay: 0.7s;
         }
-        
+
         .splash-loader {
             width: 3px;
             height: 3px;
-            background: #e50914;
+            background: linear-gradient(90deg, #feca57, #ff6b6b);
             border-radius: 50%;
             margin: 40px auto 0;
             opacity: 0;
             animation: loaderAppear 0.5s ease-out forwards;
             animation-delay: 1.2s;
-            box-shadow: 0 0 8px #e50914;
+            box-shadow: 0 0 15px #feca57;
         }
-        
+
         @keyframes zoomOutForward {
             0% {
                 opacity: 1;
@@ -118,7 +387,7 @@
                 visibility: hidden;
             }
         }
-        
+
         @keyframes slideInFromLeft {
             0% {
                 transform: translateX(-100%);
@@ -146,7 +415,7 @@
                 filter: blur(0);
             }
         }
-        
+
         @keyframes textGlitch {
             0% {
                 transform: skew(0deg);
@@ -156,22 +425,22 @@
             10% {
                 transform: skew(15deg);
                 opacity: 0.3;
-                text-shadow: -2px 0 #e50914, 2px 0 #ffffff;
+                text-shadow: -2px 0 #feca57, 2px 0 #ff6b6b;
             }
             20% {
                 transform: skew(-10deg);
                 opacity: 0.5;
-                text-shadow: 3px 0 #e50914, -3px 0 #ffffff;
+                text-shadow: 3px 0 #feca57, -3px 0 #ff6b6b;
             }
             30% {
                 transform: skew(8deg);
                 opacity: 0.7;
-                text-shadow: -1px 0 #e50914;
+                text-shadow: -1px 0 #feca57;
             }
             50% {
                 transform: skew(-5deg);
                 opacity: 0.9;
-                text-shadow: 2px 0 #ffffff;
+                text-shadow: 2px 0 #ff6b6b;
             }
             70% {
                 transform: skew(2deg);
@@ -184,7 +453,7 @@
                 text-shadow: none;
             }
         }
-        
+
         @keyframes fadeInWithGlitch {
             0% {
                 opacity: 0;
@@ -207,11 +476,11 @@
             100% {
                 opacity: 1;
                 transform: translateX(0);
-                letter-spacing: 3px;
+                letter-spacing: 4px;
                 filter: blur(0);
             }
         }
-        
+
         @keyframes loaderAppear {
             0% {
                 opacity: 0;
@@ -219,17 +488,21 @@
             }
             100% {
                 opacity: 1;
-                width: 40px;
+                width: 50px;
             }
         }
-        
+
         .splash-logo.glitch-complete {
             animation: crackEffect 0.2s ease-out;
         }
-        
+
         @keyframes crackEffect {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.02); }
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.02);
+            }
         }
     </style>
 </head>
@@ -245,13 +518,13 @@
 
     <div class="app-header">
         <div class="logo">
-            <h1>منصتي <span>حمل وانت مرتاح</span></h1>
-            <p>🚀 تحميل سريع وآمن | CET+</p>
+            <h1>منصتي <span>+CET</span></h1>
+            <p>✦ تـحميل بــلا حـدود ✦</p>
         </div>
     </div>
 
     <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="ابحث عن برنامج...">
+        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق...">
         <button id="searchBtn">بحث</button>
     </div>
 
@@ -262,10 +535,10 @@
     <div class="apps-container" id="appsContainer">
         <div class="loading-state">
             <div class="loading-spinner"></div>
-            جاري تحميل البيانات...
+            جاري تحميل التطبيقات...
         </div>
     </div>
-    <footer>© 2026 منصتي +CET - جميع الحقوق محفوظة</footer>
+    <footer>© 2026 <span style="color:#feca57;">+CET</span> - جميع الحقوق محفوظة</footer>
 </div>
 
 <!-- Firebase SDK -->
@@ -293,148 +566,46 @@
     let categories = [];
     let currentCategory = "all";
     let searchQuery = "";
-    let soundPlayed = false;
 
-    // ===== إنشاء عنصر الصوت =====
-    // استخدام SoundEffect من net-fix (صوت درامي قصير)
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // دالة لتوليد صوت درامي مثل Netflix (باستخدام Web Audio API)
-    function playNetflixSound() {
-        if (soundPlayed) return;
-        soundPlayed = true;
-        
-        try {
-            // إنشاء أوسيلاتور للحصول على صوت درامي
-            const now = audioContext.currentTime;
-            
-            // قناة الصوت الرئيسية
-            const gainNode = audioContext.createGain();
-            gainNode.connect(audioContext.destination);
-            gainNode.gain.value = 0.5;
-            
-            // أول نغمة (منخفضة - تأثير الدرام)
-            const osc1 = audioContext.createOscillator();
-            osc1.type = 'sine';
-            osc1.frequency.value = 150;
-            osc1.connect(gainNode);
-            osc1.start();
-            osc1.stop(now + 0.3);
-            
-            // نغمة ثانية (أعلى - تأثير التكسير)
-            const osc2 = audioContext.createOscillator();
-            osc2.type = 'triangle';
-            osc2.frequency.value = 400;
-            osc2.connect(gainNode);
-            osc2.start(now + 0.05);
-            osc2.stop(now + 0.25);
-            
-            // نغمة ثالثة (صوت تكسير)
-            const osc3 = audioContext.createOscillator();
-            osc3.type = 'sawtooth';
-            osc3.frequency.value = 800;
-            osc3.connect(gainNode);
-            osc3.start(now + 0.1);
-            osc3.stop(now + 0.2);
-            
-            // تأثير الـ Glitch (تغير سريع في التردد)
-            setTimeout(() => {
-                try {
-                    const glitchOsc = audioContext.createOscillator();
-                    const glitchGain = audioContext.createGain();
-                    glitchOsc.type = 'square';
-                    glitchOsc.frequency.value = 1000;
-                    glitchGain.gain.value = 0.3;
-                    glitchOsc.connect(glitchGain);
-                    glitchGain.connect(audioContext.destination);
-                    glitchOsc.start();
-                    glitchOsc.stop(audioContext.currentTime + 0.15);
-                    
-                    // تغيير التردد بسرعة لإعطاء تأثير التكسير
-                    glitchOsc.frequency.setValueAtTime(1000, audioContext.currentTime);
-                    glitchOsc.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
-                } catch(e) { console.log("Glitch sound error:", e); }
-            }, 120);
-            
-        } catch(e) {
-            console.log("Sound error:", e);
-        }
-    }
-
-    // دالة لتشغيل الصوت عند أول تفاعل من المستخدم
-    function enableAudioOnFirstInteraction() {
-        // تفعيل السياق الصوتي
-        if (audioContext.state === 'suspended') {
-            audioContext.resume();
-        }
-        playNetflixSound();
-        // إزالة المستمعين بعد أول تفاعل
-        document.removeEventListener('click', enableAudioOnFirstInteraction);
-        document.removeEventListener('touchstart', enableAudioOnFirstInteraction);
-    }
-
-    // إضافة مستمعين للصفحة لتشغيل الصوت عند أول نقرة
-    document.addEventListener('click', enableAudioOnFirstInteraction);
-    document.addEventListener('touchstart', enableAudioOnFirstInteraction);
-
-    // إضافة تأثير التكسير النهائي بعد انتهاء الأنيميشن
     setTimeout(() => {
         const logo = document.getElementById("mainLogo");
-        if (logo) {
-            logo.classList.add("glitch-complete");
-        }
+        if (logo) logo.classList.add("glitch-complete");
     }, 1300);
 
-    // إخفاء شاشة الترحيب بعد 3 ثوانٍ مع تأثير الزوم للأمام
     setTimeout(() => {
         const splash = document.getElementById("splashScreen");
         if (splash) {
             splash.classList.add("hide");
-            setTimeout(() => {
-                if (splash && splash.parentNode) splash.remove();
-            }, 800);
+            setTimeout(() => splash.remove(), 800);
         }
     }, 3000);
 
-    // دالة للحصول على أيقونة SVG
     function getIconHtml(iconName, size = 32) {
-        if (!iconName || iconName === "") {
-            iconName = "github";
-        }
+        if (!iconName) iconName = "github";
         return `<img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/${iconName}.svg" 
                     width="${size}" height="${size}" 
-                    style="display:inline-block; object-fit:contain;" 
-                    alt="${iconName}"
-                    onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/github.svg';">`;
+                    style="display:inline-block; object-fit:contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));" 
+                    onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/github.svg';">`;
     }
 
-    // الاستماع للتصنيفات
     const catsQuery = query(collection(db, "categories"), orderBy("createdAt", "asc"));
     onSnapshot(catsQuery, (snapshot) => {
         categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderCategories();
-    }, (error) => {
-        console.error("خطأ في تحميل التصنيفات:", error);
     });
 
-    // الاستماع للبرامج
     const appsQuery = query(collection(db, "apps"), orderBy("createdAt", "desc"));
     onSnapshot(appsQuery, (snapshot) => {
         apps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderApps();
     }, (error) => {
-        console.error("خطأ في تحميل البرامج:", error);
-        document.getElementById("appsContainer").innerHTML = `
-            <div class="empty-state">
-                ❌ خطأ في الاتصال بقاعدة البيانات<br>
-                <small style="font-size:11px; margin-top:8px; display:block;">تأكد من إعدادات Firebase</small>
-            </div>`;
+        document.getElementById("appsContainer").innerHTML = `<div class="empty-state">❌ خطأ في الاتصال بقاعدة البيانات</div>`;
     });
 
     function renderCategories() {
         const container = document.getElementById("categoriesList");
-        if (categories.length === 0) {
-            container.innerHTML = `<div style="color:#94a3b8; padding:8px;">📭 لا توجد تصنيفات حالياً</div>`;
+        if (!categories.length) {
+            container.innerHTML = `<div style="color:rgba(255,255,255,0.5);">📭 لا توجد تصنيفات</div>`;
             return;
         }
         let html = `<div class="category-chip ${currentCategory === "all" ? "active" : ""}" data-cat="all">✨ الكل</div>`;
@@ -444,7 +615,7 @@
         container.innerHTML = html;
         document.querySelectorAll(".category-chip").forEach(chip => {
             chip.addEventListener("click", () => {
-                currentCategory = chip.getAttribute("data-cat");
+                currentCategory = chip.dataset.cat;
                 renderCategories();
                 renderApps();
             });
@@ -459,16 +630,14 @@
             return true;
         });
 
-        if (filtered.length === 0) {
-            container.innerHTML = `<div class="empty-state">📭 لا توجد برامج مطابقة</div>`;
+        if (!filtered.length) {
+            container.innerHTML = `<div class="empty-state">📭 لا توجد تطبيقات مطابقة</div>`;
             return;
         }
 
         container.innerHTML = filtered.map(app => `
             <div class="app-item">
-                <div class="app-icon">
-                    ${getIconHtml(app.icon || "github", 32)}
-                </div>
+                <div class="app-icon">${getIconHtml(app.icon, 34)}</div>
                 <div class="app-details">
                     <div class="app-name">${app.name}</div>
                     <div class="app-category">📂 ${app.category}</div>
@@ -480,8 +649,8 @@
 
         document.querySelectorAll(".download-link").forEach(btn => {
             btn.addEventListener("click", (e) => {
-                const link = btn.getAttribute("data-link");
-                const name = btn.getAttribute("data-name");
+                const link = btn.dataset.link;
+                const name = btn.dataset.name;
                 if (!link || link === "#") {
                     e.preventDefault();
                     alert(`🔔 تم طلب تحميل: ${name}\nسيتم تفعيل الرابط من لوحة التحكم`);
