@@ -38,9 +38,6 @@
         footer { text-align: center; font-size: 10px; color: #94a3b8; padding: 16px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
 
         /* ===== شاشة ترحيب مثل Netflix ===== */
-        /* ظهور بطيء من اليسار مع تفتت وتكسير */
-        /* اختفاء: زوم للأمام (Zoom In) */
-        
         .splash-screen {
             position: fixed;
             top: 0;
@@ -55,7 +52,6 @@
             transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
         }
         
-        /* تأثير الاختفاء - زوم للأمام */
         .splash-screen.hide {
             animation: zoomOutForward 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -65,7 +61,6 @@
             overflow: hidden;
         }
         
-        /* ظهور بطيء من اليسار مع تكسير الحروف */
         .splash-logo {
             font-size: 72px;
             font-weight: 900;
@@ -75,7 +70,6 @@
             animation: slideInFromLeft 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
         
-        /* تفتت الحروف - كل حرف يظهر بشكل متقطع */
         .splash-logo span {
             color: #e50914;
             display: inline-block;
@@ -83,7 +77,6 @@
             animation-delay: 0.5s;
         }
         
-        /* النص الثانوي مع تأثير التكسير */
         .splash-plus {
             font-size: 18px;
             font-weight: 600;
@@ -95,7 +88,6 @@
             animation-delay: 0.7s;
         }
         
-        /* مؤشر التحميل يظهر متأخراً */
         .splash-loader {
             width: 3px;
             height: 3px;
@@ -108,7 +100,6 @@
             box-shadow: 0 0 8px #e50914;
         }
         
-        /* تأثير الزوم للأمام (الاختفاء) */
         @keyframes zoomOutForward {
             0% {
                 opacity: 1;
@@ -232,24 +223,18 @@
             }
         }
         
-        /* تأثير تكسير إضافي عند اكتمال الظهور */
-        @keyframes crackEffect {
-            0% {
-                transform: scale(1);
-            }
-            100% {
-                transform: scale(1.02);
-            }
-        }
-        
         .splash-logo.glitch-complete {
             animation: crackEffect 0.2s ease-out;
+        }
+        
+        @keyframes crackEffect {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.02); }
         }
     </style>
 </head>
 <body>
 <div class="phone-app">
-    <!-- شاشة ترحيب مثل Netflix (ظهور بطيء من اليسار + اختفاء زوم للأمام) -->
     <div class="splash-screen" id="splashScreen">
         <div class="splash-content">
             <div class="splash-logo" id="mainLogo">منصتي <span>+CET</span></div>
@@ -308,6 +293,89 @@
     let categories = [];
     let currentCategory = "all";
     let searchQuery = "";
+    let soundPlayed = false;
+
+    // ===== إنشاء عنصر الصوت =====
+    // استخدام SoundEffect من net-fix (صوت درامي قصير)
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // دالة لتوليد صوت درامي مثل Netflix (باستخدام Web Audio API)
+    function playNetflixSound() {
+        if (soundPlayed) return;
+        soundPlayed = true;
+        
+        try {
+            // إنشاء أوسيلاتور للحصول على صوت درامي
+            const now = audioContext.currentTime;
+            
+            // قناة الصوت الرئيسية
+            const gainNode = audioContext.createGain();
+            gainNode.connect(audioContext.destination);
+            gainNode.gain.value = 0.5;
+            
+            // أول نغمة (منخفضة - تأثير الدرام)
+            const osc1 = audioContext.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.value = 150;
+            osc1.connect(gainNode);
+            osc1.start();
+            osc1.stop(now + 0.3);
+            
+            // نغمة ثانية (أعلى - تأثير التكسير)
+            const osc2 = audioContext.createOscillator();
+            osc2.type = 'triangle';
+            osc2.frequency.value = 400;
+            osc2.connect(gainNode);
+            osc2.start(now + 0.05);
+            osc2.stop(now + 0.25);
+            
+            // نغمة ثالثة (صوت تكسير)
+            const osc3 = audioContext.createOscillator();
+            osc3.type = 'sawtooth';
+            osc3.frequency.value = 800;
+            osc3.connect(gainNode);
+            osc3.start(now + 0.1);
+            osc3.stop(now + 0.2);
+            
+            // تأثير الـ Glitch (تغير سريع في التردد)
+            setTimeout(() => {
+                try {
+                    const glitchOsc = audioContext.createOscillator();
+                    const glitchGain = audioContext.createGain();
+                    glitchOsc.type = 'square';
+                    glitchOsc.frequency.value = 1000;
+                    glitchGain.gain.value = 0.3;
+                    glitchOsc.connect(glitchGain);
+                    glitchGain.connect(audioContext.destination);
+                    glitchOsc.start();
+                    glitchOsc.stop(audioContext.currentTime + 0.15);
+                    
+                    // تغيير التردد بسرعة لإعطاء تأثير التكسير
+                    glitchOsc.frequency.setValueAtTime(1000, audioContext.currentTime);
+                    glitchOsc.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+                } catch(e) { console.log("Glitch sound error:", e); }
+            }, 120);
+            
+        } catch(e) {
+            console.log("Sound error:", e);
+        }
+    }
+
+    // دالة لتشغيل الصوت عند أول تفاعل من المستخدم
+    function enableAudioOnFirstInteraction() {
+        // تفعيل السياق الصوتي
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        playNetflixSound();
+        // إزالة المستمعين بعد أول تفاعل
+        document.removeEventListener('click', enableAudioOnFirstInteraction);
+        document.removeEventListener('touchstart', enableAudioOnFirstInteraction);
+    }
+
+    // إضافة مستمعين للصفحة لتشغيل الصوت عند أول نقرة
+    document.addEventListener('click', enableAudioOnFirstInteraction);
+    document.addEventListener('touchstart', enableAudioOnFirstInteraction);
 
     // إضافة تأثير التكسير النهائي بعد انتهاء الأنيميشن
     setTimeout(() => {
@@ -322,14 +390,13 @@
         const splash = document.getElementById("splashScreen");
         if (splash) {
             splash.classList.add("hide");
-            // إزالة الشاشة من DOM بعد انتهاء تأثير الزوم
             setTimeout(() => {
                 if (splash && splash.parentNode) splash.remove();
             }, 800);
         }
     }, 3000);
 
-    // دالة للحصول على أيقونة SVG من Simple Icons
+    // دالة للحصول على أيقونة SVG
     function getIconHtml(iconName, size = 32) {
         if (!iconName || iconName === "") {
             iconName = "github";
