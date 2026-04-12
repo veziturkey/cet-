@@ -551,14 +551,19 @@
         });
     }
 
-    // دالة التحميل الموحدة
+    // دالة التحميل المتوافقة مع Safari وجميع المتصفحات
     async function performDownload(appId, downloadLink, appName) {
         if (downloadLink && downloadLink !== "#" && downloadLink !== "javascript:void(0)") {
             try {
+                // تحديث عداد التحميلات
                 await updateDoc(doc(db, "apps", appId), { downloads: increment(1) });
-            } catch(e) { console.error("خطأ في تحديث العداد:", e); }
-            // فتح الرابط في نافذة جديدة
-            window.open(downloadLink, "_blank");
+            } catch(e) {
+                console.error("خطأ في تحديث العداد:", e);
+            }
+            
+            // حل لمشكلة Safari: استخدام window.location.href بدلاً من window.open
+            // لأن Safari يمنع window.open في بعض الحالات
+            window.location.href = downloadLink;
         } else {
             alert(`⚠️ رابط التحميل لـ ${appName} غير متوفر بعد`);
         }
@@ -585,7 +590,12 @@
                     <div class="app-name">${app.name}</div>
                     <div class="app-category">📂 ${app.category}</div>
                 </div>
-                <button class="download-link" data-id="${app.id}" data-link="${app.downloadLink || "#"}" data-name="${app.name}">تحميل</button>
+                <a href="${app.downloadLink && app.downloadLink !== "#" ? app.downloadLink : "javascript:void(0)"}" 
+                   class="download-link" 
+                   data-id="${app.id}" 
+                   data-link="${app.downloadLink}"
+                   data-name="${app.name}"
+                   target="_self">تحميل</a>
             </div>
         `).join("");
 
@@ -603,17 +613,27 @@
             });
         });
 
-        // معالج زر التحميل
+        // معالج زر التحميل لجميع المتصفحات بما فيها Safari
         document.querySelectorAll(".download-link").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 e.stopPropagation();
                 e.preventDefault();
                 
-                const id = btn.dataset.id;
-                const link = btn.dataset.link;
-                const name = btn.dataset.name;
+                const id = btn.getAttribute("data-id");
+                const link = btn.getAttribute("data-link");
+                const name = btn.getAttribute("data-name");
                 
-                await performDownload(id, link, name);
+                if (link && link !== "#" && link !== "javascript:void(0)") {
+                    try {
+                        await updateDoc(doc(db, "apps", id), { downloads: increment(1) });
+                    } catch(err) {
+                        console.error("خطأ:", err);
+                    }
+                    // استخدام location.href بدلاً من window.open لمشاكل Safari
+                    window.location.href = link;
+                } else {
+                    alert(`⚠️ رابط التحميل لـ ${name} غير متوفر بعد`);
+                }
             });
         });
     }
@@ -627,7 +647,14 @@
             <h2>${app.name}</h2>
             <p><strong>📂 التصنيف:</strong> ${app.category}</p>
             <p><strong>📝 الوصف:</strong><br>${app.description || "لا يوجد وصف"}</p>
-            <button class="download-link" id="detailDownloadBtn" data-id="${app.id}" data-link="${app.downloadLink}" data-name="${app.name}">📥 تحميل</button>
+            <a href="${app.downloadLink && app.downloadLink !== "#" ? app.downloadLink : "javascript:void(0)"}" 
+               class="download-link" 
+               id="detailDownloadBtn"
+               data-id="${app.id}" 
+               data-link="${app.downloadLink}"
+               data-name="${app.name}"
+               style="display:inline-block; margin-bottom:10px; text-decoration:none;"
+               target="_self">📥 تحميل</a>
             <button class="back-btn" onclick="closeDetails()">🔙 رجوع</button>
         `;
         
@@ -636,10 +663,21 @@
         if (detailBtn) {
             detailBtn.addEventListener("click", async (e) => {
                 e.stopPropagation();
-                const id = detailBtn.dataset.id;
-                const link = detailBtn.dataset.link;
-                const name = detailBtn.dataset.name;
-                await performDownload(id, link, name);
+                e.preventDefault();
+                const id = detailBtn.getAttribute("data-id");
+                const link = detailBtn.getAttribute("data-link");
+                const name = detailBtn.getAttribute("data-name");
+                
+                if (link && link !== "#" && link !== "javascript:void(0)") {
+                    try {
+                        await updateDoc(doc(db, "apps", id), { downloads: increment(1) });
+                    } catch(err) {
+                        console.error("خطأ:", err);
+                    }
+                    window.location.href = link;
+                } else {
+                    alert(`⚠️ رابط التحميل لـ ${name} غير متوفر بعد`);
+                }
             });
         }
         
