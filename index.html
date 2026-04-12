@@ -25,7 +25,6 @@
             padding: 10px;
         }
         
-        /* تحسين للهواتف */
         @media (max-width: 768px) {
             body { padding: 8px; }
             .app-header { padding: 20px 15px 15px !important; }
@@ -40,18 +39,10 @@
             .app-icon img { width: 28px !important; height: 28px !important; }
             .app-name { font-size: 14px !important; }
             .app-category { font-size: 10px !important; }
-            .download-link { padding: 6px 12px !important; font-size: 11px !important; }
+            .download-link { padding: 8px 14px !important; font-size: 12px !important; display: inline-block !important; }
             .details-card { padding: 20px !important; margin: 10px !important; }
-            .details-card img { width: 70px !important; height: 70px !important; }
-            .details-card h2 { font-size: 18px !important; }
         }
         
-        @media (max-width: 480px) {
-            .app-name { font-size: 13px !important; }
-            .download-link { min-width: 55px; text-align: center; }
-        }
-        
-        /* شاشة الترحيب */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -182,16 +173,13 @@
             font-weight: 800;
             cursor: pointer;
             font-size: 13px;
-            transition: transform 0.1s ease;
         }
-        .search-bar button:active { transform: scale(0.97); }
         
         .categories-wrapper {
             overflow-x: auto;
             white-space: nowrap;
             padding: 5px 20px;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
         }
         
         .categories-list {
@@ -206,7 +194,7 @@
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.3s;
             color: var(--text-secondary);
             border: 1px solid var(--border);
             display: inline-block;
@@ -239,7 +227,7 @@
             gap: 14px;
             border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.35s;
             animation: fadeSlideUp 0.4s ease-out backwards;
         }
         
@@ -275,8 +263,9 @@
             display: inline-block;
             border: none;
             transition: transform 0.1s ease;
+            z-index: 10;
+            position: relative;
         }
-        .download-link:active { transform: scale(0.95); }
         
         .details-page {
             position: fixed;
@@ -316,9 +305,7 @@
             margin-top: 15px;
             cursor: pointer;
             font-size: 14px;
-            transition: transform 0.1s ease;
         }
-        .back-btn:active { transform: scale(0.97); }
         
         .empty-state, .loading-state { text-align: center; padding: 50px 20px; color: var(--text-secondary); }
         .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.2); border-top: 3px solid #feca57; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
@@ -384,7 +371,7 @@
         return `<img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/${iconName}.svg" width="${size}" height="${size}" style="display:block;" onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/github.svg'">`;
     }
 
-    // إخفاء شاشة الترحيب بعد 2.5 ثانية
+    // إخفاء شاشة الترحيب
     setTimeout(() => {
         const splash = document.getElementById("splashScreen");
         if (splash) {
@@ -414,13 +401,28 @@
         container.innerHTML = html;
         
         document.querySelectorAll(".category-chip").forEach(chip => {
-            chip.addEventListener("click", (e) => {
-                e.stopPropagation();
+            chip.addEventListener("click", () => {
                 currentCategory = chip.dataset.cat;
                 renderCategories();
                 renderApps();
             });
         });
+    }
+
+    // دالة معالجة التحميل
+    async function handleDownload(appId, downloadLink, appName) {
+        if (downloadLink && downloadLink !== "#" && downloadLink !== "javascript:void(0)") {
+            try {
+                // زيادة عداد التحميلات في الخلفية
+                await updateDoc(doc(db, "apps", appId), { downloads: increment(1) });
+            } catch(err) {
+                console.error("خطأ في تحديث العداد:", err);
+            }
+            // فتح الرابط في نافذة جديدة
+            window.open(downloadLink, "_blank");
+        } else {
+            alert(`⚠️ رابط التحميل لـ ${appName} غير متوفر بعد`);
+        }
     }
 
     function renderApps() {
@@ -437,54 +439,39 @@
         }
         
         container.innerHTML = filtered.map((app, index) => `
-            <div class="app-item" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
+            <div class="app-item" data-id="${app.id}" data-link="${app.downloadLink}" data-name="${app.name}" style="animation-delay: ${index * 0.05}s">
                 <div class="app-icon">${getIconHtml(app.icon, 30)}</div>
                 <div class="app-details">
                     <div class="app-name">${app.name}</div>
                     <div class="app-category">📂 ${app.category}</div>
                 </div>
-                <a href="${app.downloadLink && app.downloadLink !== "#" ? app.downloadLink : "javascript:void(0)"}" 
-                   class="download-link" 
-                   data-id="${app.id}" 
-                   data-link="${app.downloadLink}"
-                   data-name="${app.name}"
-                   target="_blank"
-                   rel="noopener noreferrer">تحميل</a>
+                <button class="download-link" data-id="${app.id}" data-link="${app.downloadLink}" data-name="${app.name}">تحميل</button>
             </div>
         `).join("");
         
-        // تفاصيل البرنامج عند الضغط على البطاقة (وليس الزر)
+        // إضافة حدث الضغط على البطاقة (لإظهار التفاصيل)
         document.querySelectorAll(".app-item").forEach(item => {
-            const downloadBtn = item.querySelector(".download-link");
+            const itemId = item.dataset.id;
             item.addEventListener("click", (e) => {
-                // إذا كان الضغط على زر التحميل، لا نفتح التفاصيل
-                if (e.target === downloadBtn || downloadBtn.contains(e.target)) {
+                // منع الحدث إذا كان المصدر هو زر التحميل
+                if (e.target.classList && e.target.classList.contains("download-link")) {
                     return;
                 }
-                showDetails(item.dataset.id);
+                showDetails(itemId);
             });
         });
         
-        // معالج زر التحميل - يعمل بشكل صحيح على الهواتف
+        // إضافة حدث الضغط على زر التحميل (بطريقة منفصلة وآمنة)
         document.querySelectorAll(".download-link").forEach(btn => {
-            btn.addEventListener("click", async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const link = btn.getAttribute("data-link");
-                const id = btn.getAttribute("data-id");
-                const name = btn.getAttribute("data-name");
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation(); // منع وصول الحدث إلى العنصر الأب
+                e.preventDefault();   // منع السلوك الافتراضي
                 
-                if (link && link !== "#" && link !== "javascript:void(0)") {
-                    try {
-                        // زيادة عداد التحميلات في الخلفية
-                        await updateDoc(doc(db, "apps", id), { downloads: increment(1) });
-                    } catch(err) { console.error("خطأ في تحديث العداد:", err); }
-                    // فتح الرابط
-                    window.open(link, "_blank");
-                } else {
-                    alert(`⚠️ رابط التحميل لـ ${name} غير متوفر بعد`);
-                }
-                return false;
+                const id = btn.dataset.id;
+                const link = btn.dataset.link;
+                const name = btn.dataset.name;
+                
+                handleDownload(id, link, name);
             });
         });
     }
@@ -498,8 +485,22 @@
             <h2>${app.name}</h2>
             <p><strong>📂 التصنيف:</strong> ${app.category}</p>
             <p><strong>📝 الوصف:</strong><br>${app.description || "لا يوجد وصف"}</p>
-            <button class="back-btn" onclick="closeDetails()">🔙 رجوع</button>
+            <button class="download-link" style="margin: 15px auto 0; display: inline-block;" data-id="${app.id}" data-link="${app.downloadLink}" data-name="${app.name}">📥 تحميل</button>
+            <button class="back-btn" style="display: block; margin: 10px auto 0;" onclick="closeDetails()">🔙 رجوع</button>
         `;
+        
+        // إضافة حدث زر التحميل داخل صفحة التفاصيل
+        const detailDownloadBtn = document.querySelector("#detailsContent .download-link");
+        if (detailDownloadBtn) {
+            detailDownloadBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = detailDownloadBtn.dataset.id;
+                const link = detailDownloadBtn.dataset.link;
+                const name = detailDownloadBtn.dataset.name;
+                handleDownload(id, link, name);
+            });
+        }
+        
         document.getElementById("detailsPage").classList.add("show");
     }
     
